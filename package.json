@@ -1,0 +1,19 @@
+{
+  "name": "nodejs-beers-master",
+  "version": "1.0.0",
+  "description": "NodeJs Beers API",
+  "main": "index.js",
+  "scripts": {
+    "app": "nodemon app.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "body-parser": "^1.14.1",
+    "express": "^4.13.3"
+  },
+  "devDependencies": {
+    "nodemon": "^1.8.1"
+  }
+}
