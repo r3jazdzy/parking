@@ -55,7 +55,7 @@ function sendRequest(options) {
                         var parkings = json[tmp];
                         for (var index in parkings) {
                             var park = parkings[index];
-                            var id = park["id"];
+                            var id = park['id'];
                             var parkInformation = park['parkInformation'];
                             var status = parkInformation['status'];
                             var max = parkInformation['max'];
