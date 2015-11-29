@@ -29,11 +29,11 @@ var parkInformationSchema = new mongoose.Schema({
 
 var ParkInformation = mongoose.model('ParkInformation', parkInformationSchema);
 
-var parkInformation = new ParkInformation({
+/*var parkInformation = new ParkInformation({
     id: 'colombier'
     , name: 'Colombier'
     , geometry: {type: 'Point', coordinates: [-187247.17,6125141.12]}
-});
+});*/
 
 ParkInformation.remove({}, function(){ console.log("collection ParkInformation removed")});
 
@@ -110,7 +110,7 @@ function isJsonAvailable(str) {
 
 sendRequest(options);
 
-/*¹ParkInformation.find({}, function(err, data){
+ParkInformation.find({}, function(err, data){
     console.log(data);
-});*/
+});
 

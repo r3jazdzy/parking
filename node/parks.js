@@ -15,7 +15,7 @@ var parkSchema = new mongoose.Schema({
     , status: String
     , max: Number
     , free: Number
-    , date: {type: Number, default: Date.now }
+    , date: {type: Date, default: Date.now }
 }, {
     versionKey : false
 });
@@ -86,6 +86,8 @@ function isJsonAvailable(str) {
     }
 }
 
-setInterval(function () {
+sendRequest(options);
+
+/*setInterval(function () {
     sendRequest(options);
-}, requestDelay);
+}, requestDelay);*/
