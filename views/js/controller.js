@@ -2,7 +2,7 @@
 
 /* Controllers */
 
-angular
+var app = angular
 .module('ParkingControllers', [])
 .controller('DashboardCtrl', ['$scope','Parking', function($scope, Parking) {
 

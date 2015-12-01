@@ -18,4 +18,10 @@ angular.module('ParkServices', ['ngResource'])
   .factory('LastParking', ['$resource',
   function($resource){
     return $resource('http://192.168.200.215:4567/parking/last', null);
+  }])
+  .factory('ParkPosition', ['$resource',
+    function($resource) {
+      return $resource('http://192.168.200.215:4567/parkingInformation', {}, {
+        query: {method:'GET', params:{status:''}, isArray:true}
+	});
   }]);
