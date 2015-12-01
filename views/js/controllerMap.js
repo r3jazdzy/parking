@@ -1,54 +1,65 @@
-app.controller('MapCtrl', ['$scope', function ($scope) {
+app.controller('MapCtrl', ['$scope', 'ParkPosition', function ($scope, ParkPosition) {
 
-	var myCenter=new google.maps.LatLng(51.508742,-0.120850);
-  var mapProp;
+	var myCenter=new google.maps.LatLng(48.1119800,-1.6742900);
+	var mapProp;
 
-  function initialize() {
-    mapProp = {
-      center:myCenter,
-      zoom:5,
-      mapTypeId:google.maps.MapTypeId.ROADMAP
-    };
-    var map=new google.maps.Map(document.getElementById("googleMap"), mapProp);
+	function initialize() {
+	mapProp = {
+		center:myCenter,
+		zoom:10,
+		mapTypeId:google.maps.MapTypeId.ROADMAP
+	};
 
-    //set informations of parkings around the world !
-    var marker=new google.maps.Marker({
-      position:myCenter,
-    });
+	var map=new google.maps.Map(document.getElementById("googleMap"), mapProp);
 
-    marker.setMap(map);
+	//set informations of parkings around the world !
+	ParkPosition.query().
+	$promise.then(function(data) {
 
-    var infowindow = new google.maps.InfoWindow({
-      content:"Hello World!"
-    });
+		console.log(data.length);
+		for (var i=0; i< data.length; i++) {
 
-    infowindow.open(map,marker);
-    //end set
+			var marker=new google.maps.Marker({
+				position:new google.maps.LatLng(data[i].geometry.coordinates[0],data[i].geometry.coordinates[1]),
+			});
 
-  }
-  function erreur(err) {
-    console.log("error !!!");
-    console.warn('ERROR(' + err.code + '): ' + err.message);
-  }
+			marker.setMap(map);
 
-  if (navigator.geolocation){
-    console.log("map geoloc available");
-    var watchId = navigator.geolocation.watchPosition(successCallback,erreur,{enableHighAccuracy: true});
-    console.log("wachtId : ",watchId);
-  }
-  else
-    alert("Votre navigateur ne prend pas en compte la géolocalisation HTML5");    
-   
-  function successCallback(position){
-    console.log("map successCallback");
-    map.panTo(new google.maps.LatLng(position.coords.latitude, position.coords.longitude));
-    var marker = new google.maps.Marker({
-      position: new google.maps.LatLng(position.coords.latitude, position.coords.longitude), 
-      map: map
-    });
-  } 
+			var infowindow = new google.maps.InfoWindow({
+				content: data[i].id+" X places libres"
+			});
 
-  //google.maps.event.addDomListener(window, 'load', initialize);
-  $scope.$on('$routeChangeSuccess', initialize);
+			infowindow.open(map,marker);
+			console.log(data[i].id +" coordinates : " +data[i].geometry.coordinates);
+		}
+
+	});
+	//end set
+
+	}
+	function erreur(err) {
+		console.log("error !!!");
+		console.warn('ERROR(' + err.code + '): ' + err.message);
+	}
+/*
+	if (navigator.geolocation){
+		console.log("map geoloc available");
+		var watchId = navigator.geolocation.watchPosition(successCallback,erreur,{enableHighAccuracy: true});
+		console.log("wachtId : ",watchId);
+	}
+	else
+		alert("Votre navigateur ne prend pas en compte la géolocalisation HTML5");    
+*/
+	function successCallback(position){
+		console.log("map successCallback");
+		map.panTo(new google.maps.LatLng(position.coords.latitude, position.coords.longitude));
+		var marker = new google.maps.Marker({
+			position: new google.maps.LatLng(position.coords.latitude, position.coords.longitude), 
+			map: map
+		});
+	} 
+
+	//google.maps.event.addDomListener(window, 'load', initialize);
+	$scope.$on('$routeChangeSuccess', initialize);
 
 }]);
