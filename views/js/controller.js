@@ -69,8 +69,6 @@ angular
     console.log(dataParks);
     lineChart(categories);
   });
-}])
-.controller('MapCtrl', ['$scope', function($scope) {
 }]);
 
 function barChart(parksName, seriesFree, seriesMax) {
