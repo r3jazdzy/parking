@@ -16,7 +16,7 @@ var parkSchema = new mongoose.Schema({
 var Park = mongoose.model('Park', parkSchema);
 
 Park.find({}, function(error, data){
-    fs.writeFile("/home/pi/Western_Digital/dump.json", data, function(err) {
+    fs.writeFile("dump.json", JSON.stringify(data), function(err) {
         if(err) {
             console.log(err);
         }

@@ -1,0 +1,3 @@
+mongoimport --db parks --collection parks --jsonArray --file dump.json
+
+mongod.exe --dbpath D:\Donnees\Documents\parking\mongo
