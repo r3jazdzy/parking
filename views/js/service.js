@@ -1,7 +1,23 @@
+var $server = 'http://192.168.200.215:4567';
+
 angular.module('ParkServices', ['ngResource'])
-  .factory('Park', ['$resource',
-    function($resource) {
-      return $resource('http://192.168.200.215:4567/parking', {}, {
-        query: {method:'GET', params:{status:''}, isArray:true}
-      });
-    }]);
+  .factory('Parking', ['$resource',
+  function($resource){
+    return $resource('http://192.168.200.215:4567/parking', null);
+  }])
+  .factory('MaxParking', function($resource) {
+    //  return $resource('http://192.168.200.215:4567/parking/max', null);
+      return $resource(
+        $server + "/parking/:Id",
+        {Id: "@Id" },
+        {
+            "update": {method: "PUT"},
+            "reviews": {'method': 'GET', 'params': {'reviews_only': "true"}, isArray: true}
+
+        }
+    )
+  })
+  .factory('LastParking', ['$resource',
+  function($resource){
+    return $resource('http://192.168.200.215:4567/parking/last', null);
+  }]);

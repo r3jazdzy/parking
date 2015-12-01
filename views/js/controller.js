@@ -4,7 +4,7 @@
 
 angular
 .module('ParkingControllers', [])
-.controller('DashboardCtrl', ['$scope', function($scope, Park) {
+.controller('DashboardCtrl', ['$scope','Parking', function($scope, Parking) {
 
   $scope['parks'] = [{"id":"colombier","status":"AVAILABLE","name":"Colombier","max":1143,"free":742},
   {"id":"gare-sud","status":"AVAILABLE","name":"Gare-Sud","max":294,"free":5},
@@ -31,45 +31,43 @@ angular
 .controller('OccupationCtrl', ['$scope', function($scope) {
   //  barChart();
 }])
-.controller('ParksMaxCtrl', ['$scope', function($scope) {
+.controller('ParksMaxCtrl', ['$scope', 'MaxParking', function($scope, MaxParking) {
 
-  $scope['parks'] =
-  [{"name":"Colombier","max":1143},
-  {"name":"Gare-Sud","max":294},
-  {"name":"Chézy-Dinan","max":403},
-  {"name":"Vilaine","max":245},
-  {"name":"Hoche","max":776},
-  {"name":"Centre Commercial Kennedy","max":193},
-  {"name":"Les Lices","max":424},
-  {"name":"Charles de Gaulle","max":756},
-  {"name":"Kléber","max":394},
-  {"name":"Arsenal","max":605}];
+  MaxParking.query().
+    $promise.then(function(data) {
 
-  var parks = [];
-  for (var p in $scope['parks']) {
+      var parks = [];
+      for (var i=0; i<data.length; i++) {
+        parks.push({name: data[i]._id.name, y: data[i]._id.max});
+      }
 
-    parks.push({name: $scope['parks'][p].name, y: $scope['parks'][p].max});
-  }
-
-  console.log(parks);
-  pieChart(parks);
+      pieChart(parks);
+    });
 }])
-.controller('AverageCtrl', ['$scope', 'Park', function($scope, Park) {
+.controller('AverageCtrl', ['$scope', 'Parking', function($scope, Parking) {
 
-  Park.query().
+  Parking.query().
   $promise.then(function(data) {
 
-    //data = data.splice(data.length-5, 5);
-    console.log(data.length);
-    for (var i=0; i< data.length; i++) {
-      var id = data[i]._id;
+  var dataParks = [];
+  var categories = [];
 
+  for (var i=0; i< data.length; i++) {
+    if (dataParks.indexOf())
+      console.log(dataParks.indexOf("Centre Commercial Kenndy"));
+  }
+
+  for (var i=0; i< data.length; i++) {
+      var id = data[i]._id;
       var date = id.day + '/' + id.month + '/' + id.year + ' ' + id.hour + "h";
 
-      console.log(date);
-      console.log(data[i]._id);
+      if (id.name === "Centre Commercial Kennedy") {
+        dataParks.push(data[i].free);
+      }
+      categories.push(date);
     }
-    //lineChart();
+    console.log(dataParks);
+    lineChart(categories);
   });
 }])
 .controller('MapCtrl', ['$scope', function($scope) {
@@ -131,14 +129,14 @@ function pieChart(parks) {
   });
 }
 
-function lineChart() {
+function lineChart(categories) {
   $('#chart_container').highcharts({
     title: {
       text: 'Fréquentation des parkings',
       x: -20 //center
     },
     xAxis: {
-      categories: ['12h', '13h', '14h', '15h', '16h']
+      categories: categories//['12h', '13h', '14h', '15h', '16h']
     },
     yAxis: {
       title: {
