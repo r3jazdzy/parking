@@ -1,7 +1,7 @@
-angular.module('BeerServices', ['ngResource'])
-  .factory('Beer', ['$resource',
+angular.module('ParkServices', ['ngResource'])
+  .factory('Park', ['$resource',
     function($resource) {
-      return $resource('api/beers/:beerId', {}, {
-        query: {method:'GET', params:{beerId:''}, isArray:true}
+      return $resource('http://192.168.200.215:4567/parking', {}, {
+        query: {method:'GET', params:{status:''}, isArray:true}
       });
     }]);

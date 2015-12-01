@@ -4,6 +4,7 @@
 
 var angularParking = angular.module('AngularParks', [
   'ParkingControllers',
+  'ParkServices',
   'ngRoute'
 ]);
 
@@ -32,5 +33,5 @@ angularParking.config(['$routeProvider',
       }).
       otherwise({
         redirectTo: '/dashboard'
-      });
+      })
   }]);
