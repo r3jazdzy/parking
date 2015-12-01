@@ -3,8 +3,8 @@
 /* Controllers */
 
 angular
-.module('ParkingControllers', [])
-.controller('DashboardCtrl', ['$scope', function($scope, Park) {
+var app= angular.module('ParkingControllers', [])
+app.controller('DashboardCtrl', ['$scope', function($scope, Park) {
 
   $scope['parks'] = [{"id":"colombier","status":"AVAILABLE","name":"Colombier","max":1143,"free":742},
   {"id":"gare-sud","status":"AVAILABLE","name":"Gare-Sud","max":294,"free":5},
@@ -28,10 +28,10 @@ angular
   }
   barChart(parksName, seriesFree, seriesUses);
 }])
-.controller('OccupationCtrl', ['$scope', function($scope) {
+app.controller('OccupationCtrl', ['$scope', function($scope) {
   //  barChart();
 }])
-.controller('ParksMaxCtrl', ['$scope', function($scope) {
+app.controller('ParksMaxCtrl', ['$scope', function($scope) {
 
   $scope['parks'] =
   [{"name":"Colombier","max":1143},
@@ -54,7 +54,7 @@ angular
   console.log(parks);
   pieChart(parks);
 }])
-.controller('AverageCtrl', ['$scope', 'Park', function($scope, Park) {
+app.controller('AverageCtrl', ['$scope', 'Park', function($scope, Park) {
 
   Park.query().
   $promise.then(function(data) {
@@ -71,9 +71,6 @@ angular
     }
     //lineChart();
   });
-}])
-.controller('MapCtrl', ['$scope', function($scope) {
-  mapChart($scope);
 }]);
 
 function barChart(parksName, seriesFree, seriesMax) {
@@ -168,58 +165,4 @@ function lineChart() {
       data: [120, 150, 140, 120, 115]
     }]
   });
-}
-
-
-function mapChart($scope) {
-  var myCenter=new google.maps.LatLng(51.508742,-0.120850);
-  var mapProp;
-
-  function initialize() {
-    mapProp = {
-      center:myCenter,
-      zoom:5,
-      mapTypeId:google.maps.MapTypeId.ROADMAP
-    };
-    var map=new google.maps.Map(document.getElementById("googleMap"), mapProp);
-
-    //set informations of parkings around the world !
-    var marker=new google.maps.Marker({
-      position:myCenter,
-    });
-
-    marker.setMap(map);
-
-    var infowindow = new google.maps.InfoWindow({
-      content:"Hello World!"
-    });
-
-    infowindow.open(map,marker);
-    //end set
-
-  }
-  function erreur(err) {
-    console.log("error !!!");
-    console.warn('ERROR(' + err.code + '): ' + err.message);
-  }
-
-  if (navigator.geolocation){
-    console.log("map geoloc available");
-    var watchId = navigator.geolocation.watchPosition(successCallback,erreur,{enableHighAccuracy: true});
-    console.log("wachtId : ",watchId);
-  }
-  else
-    alert("Votre navigateur ne prend pas en compte la géolocalisation HTML5");    
-   
-  function successCallback(position){
-    console.log("map successCallback");
-    map.panTo(new google.maps.LatLng(position.coords.latitude, position.coords.longitude));
-    var marker = new google.maps.Marker({
-      position: new google.maps.LatLng(position.coords.latitude, position.coords.longitude), 
-      map: map
-    });
-  } 
-
-  //google.maps.event.addDomListener(window, 'load', initialize);
-  $scope.$on('$routeChangeSuccess', initialize);
 }
