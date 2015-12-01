@@ -11,9 +11,7 @@ angular.module('ParkServices', ['ngResource'])
         $server + "/parking/:Id",
         {Id: "@Id" },
         {
-            "update": {method: "PUT"},
             "reviews": {'method': 'GET', 'params': {'reviews_only': "true"}, isArray: true}
-
         }
     )
   })

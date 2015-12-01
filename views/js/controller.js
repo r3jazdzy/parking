@@ -33,6 +33,7 @@ angular
 }])
 .controller('ParksMaxCtrl', ['$scope', 'MaxParking', function($scope, MaxParking) {
 
+  console.log(MaxParking.get({},{'Id': "max"}));
   MaxParking.query().
     $promise.then(function(data) {
 
@@ -61,12 +62,9 @@ angular
       var id = data[i]._id;
       var date = id.day + '/' + id.month + '/' + id.year + ' ' + id.hour + "h";
 
-      if (id.name === "Centre Commercial Kennedy") {
-        dataParks.push(data[i].free);
-      }
-      categories.push(date);
+      if (categories[categories.length-1] != date) categories.push(date);
     }
-    console.log(dataParks);
+    console.log(categories);
     lineChart(categories);
   });
 }]);
