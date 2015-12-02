@@ -5,12 +5,24 @@ import org.slf4j.LoggerFactory;
 
 import static spark.Spark.get;
 
+/**
+ *
+ */
 public class ParkingAPI {
 
+    /**
+     *
+     */
     public static Logger logger = LoggerFactory.getLogger(ParkingAPI.class);
 
+    /**
+     *
+     */
     private static DB db;
 
+    /**
+     *
+     */
     private static void initDB() {
         try {
             MongoClient mongoClient = new MongoClient( "localhost" , 27017 );
@@ -29,6 +41,10 @@ public class ParkingAPI {
         }
     }*/
 
+    /**
+     *
+     * @param args
+     */
     public static void main(String[] args) {
 
         initDB();

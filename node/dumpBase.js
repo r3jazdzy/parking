@@ -6,9 +6,10 @@ mongoose.connect('mongodb://localhost/parks');
 var parkSchema = new mongoose.Schema({
     id : String
     , status: String
+	, name: String
     , max: Number
     , free: Number
-    , date: {type: Number, default: Date.now }
+    , date: {type: Date }
 }, {
     versionKey : false
 });

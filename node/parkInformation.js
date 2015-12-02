@@ -1,5 +1,6 @@
 var mongoose = require('mongoose');
 var http = require('http');
+var proj4 = require('proj4');
 
 var options = {
     host: 'data.citedia.com',
@@ -66,9 +67,20 @@ function sendRequest(options) {
     });
 }
 
+function convertCoordinates(coordinates){
+	var firstProjection = "+proj=merc +a=6378137 +b=6378137 +lat_ts=0.0 +lon_0=0.0 +x_0=0.0 +y_0=0 +units=m +k=1.0 +nadgrids=@null +no_defs"
+	var secondProjection = "+proj=longlat +a=6378137.0 +b=6356752.31424518 +ellps=WGS84 +datum=WGS84 +units=degrees"
+	return proj4(firstProjection, secondProjection, coordinates);
+}
+
 var getNameAndInsertParking = function(park){
-    var parkGeometry = park["geometry"];
-    var parkId = park["id"];
+	var parkGeometry = park.geometry;
+    var coordinates = convertCoordinates(parkGeometry.coordinates);
+	var tmp = coordinates[0];
+	coordinates[0] = coordinates[1];
+	coordinates[1] = tmp;
+	parkGeometry.coordinates = coordinates;
+    var parkId = park.id;
     var url = {
         host: options.host,
         path: options.path + '/' + parkId
@@ -83,7 +95,7 @@ var getNameAndInsertParking = function(park){
             if (!json)
                 getNameAndInsertParking(park);
             else {
-                var parkName = json["name"];
+                var parkName = json.name;
                 var parkInformation = new ParkInformation({
                     id: parkId
                     , name: parkName
@@ -107,6 +119,7 @@ function isJsonAvailable(str) {
         return false;
     }
 }
+
 
 sendRequest(options);
 
