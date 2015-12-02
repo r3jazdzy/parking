@@ -3,12 +3,22 @@ import com.mongodb.*;
 import java.util.*;
 
 import static java.util.Arrays.asList;
+import static java.util.Arrays.sort;
 
+/**
+ *
+ */
 public class Parking {
 
+    /**
+     * Récupère les informations des parking en effectuant une moyenne sur les places libres et les triant par ordre croissant selon la date
+     * @param db la base mongoDB
+     * @return la liste de documents contenant les informations des parking, moyennés par heure
+     */
     public static List<DBObject> getAllParking(DB db) {
-        List<DBObject> dbObjectList = new ArrayList<>();
-
+        /**
+         * Extraie les informations utiles pour effectuer l'aggregation
+         */
         DBObject projectFields = new BasicDBObject("parking", 1);
         projectFields.put("id", "$id");
         projectFields.put("nom", "$name");
@@ -20,6 +30,9 @@ public class Parking {
         projectFields.put("h", new BasicDBObject("$substr", new ArrayList(asList("$date", 11, 2))));
         DBObject project = new BasicDBObject("$project", projectFields );
 
+        /**
+         * Groupe les résultats par id et par heure et effectue une moyenne sur les heures pour les places libres
+         */
         DBObject groupFields = new BasicDBObject( "_id", "$parking");
         BasicDBObject basicDBObject = new BasicDBObject();
         basicDBObject.put("year", "$y");
@@ -33,18 +46,36 @@ public class Parking {
         groupFields.put("free", new BasicDBObject("$avg", "$free"));
         DBObject group = new BasicDBObject("$group", groupFields);
 
-        DBObject sortFields = new BasicDBObject("date", 1);
+        /**
+         * Trie les résultats par date
+         */
+        DBObject sortFields = new BasicDBObject();
+        sortFields.put("_id.year", 1);
+        sortFields.put("_id.month", 1);
+        sortFields.put("_id.day", 1);
+        sortFields.put("_id.hour", 1);
         DBObject sort = new BasicDBObject("$sort", sortFields);
 
-        for(DBObject dbObject : db.getCollection("parks").aggregate(project, sort, group).results())
+        List<DBObject> dbObjectList = new ArrayList<>();
+        for(DBObject dbObject : db.getCollection("parks").aggregate(project, group, sort).results())
             dbObjectList.add(dbObject);
         return dbObjectList;
     }
 
+    /**
+     * Récupère les informations des derniers parkings enregistrés en base de données
+     * @param db la base mongoDB
+     * @return la liste de documents contenant les informations
+     */
     public static List<DBObject> getLastParking(DB db) {
         return db.getCollection("parks").find().sort(new BasicDBObject("date", -1)).limit(db.getCollection("parkinformations").find().count()).toArray();
     }
 
+    /**
+     * Récupère la capacite maximale des parkings
+     * @param db la base mongoDB
+     * @return la liste de documents contenant les informations
+     */
     public static List<DBObject> getMaxParking(DB db) {
         List<DBObject> dbObjectList = new ArrayList<>();
 
