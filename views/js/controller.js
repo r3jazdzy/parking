@@ -61,12 +61,10 @@ var app = angular
       var id = data[i]._id;
       var date = id.day + '/' + id.month + '/' + id.year + ' ' + id.hour + "h";
 
-      if (id.name === "Centre Commercial Kennedy") {
-        dataParks.push(data[i].free);
-      }
+
       categories.push(date);
     }
-    console.log(dataParks);
+    console.log(categories);
     lineChart(categories);
   });
 }]);
