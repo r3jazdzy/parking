@@ -13,7 +13,7 @@ angular.module('ParkServices', ['ngResource'])
         {
             "reviews": {'method': 'GET', 'params': {'reviews_only': "true"}, isArray: true}
         }
-    )
+    );
   })
   .factory('LastParking', ['$resource',
   function($resource){

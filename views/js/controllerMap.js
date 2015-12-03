@@ -48,16 +48,16 @@ app.controller('MapCtrl', ['$scope', 'ParkPosition', function ($scope, ParkPosit
 		console.log("wachtId : ",watchId);
 	}
 	else
-		alert("Votre navigateur ne prend pas en compte la géolocalisation HTML5");    
+		alert("Votre navigateur ne prend pas en compte la géolocalisation HTML5");
 */
 	function successCallback(position){
 		console.log("map successCallback");
 		map.panTo(new google.maps.LatLng(position.coords.latitude, position.coords.longitude));
 		var marker = new google.maps.Marker({
-			position: new google.maps.LatLng(position.coords.latitude, position.coords.longitude), 
+			position: new google.maps.LatLng(position.coords.latitude, position.coords.longitude),
 			map: map
 		});
-	} 
+	}
 
 	//google.maps.event.addDomListener(window, 'load', initialize);
 	$scope.$on('$routeChangeSuccess', initialize);
