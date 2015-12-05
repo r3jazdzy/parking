@@ -2,24 +2,37 @@
 
 /* App Module */
 
-var angularBeer = angular.module('AngularBeer', [
-  'ngRoute',
-  'BeerControllers',
-  'BeerFilters'
+var angularParking = angular.module('AngularParks', [
+  'ParkingControllers',
+  'ParkServices',
+  'ngRoute'
 ]);
 
-angularBeer.config(['$routeProvider',
+
+angularParking.config(['$routeProvider',
   function($routeProvider) {
     $routeProvider.
-      when('/beers', {
-        templateUrl: 'partials/beer-list.html',
-        controller: 'BeerListCtrl'
+      when('/dashboard', {
+        templateUrl: 'partials/dashboard.html',
+        controller: 'DashboardCtrl'
       }).
-      when('/beers/:beerId', {
-        templateUrl: 'partials/beer-detail.html',
-        controller: 'BeerDetailCtrl'
+      when('/occupation', {
+        templateUrl: 'partials/chart.html',
+        controller: 'OccupationCtrl'
+      }).
+      when('/maxParks', {
+        templateUrl: 'partials/chart.html',
+        controller: 'ParksMaxCtrl'
+      }).
+      when('/average', {
+        templateUrl: 'partials/chart.html',
+        controller: 'AverageCtrl'
+      }).
+      when('/map', {
+        templateUrl: 'partials/map.html',
+        controller: 'MapCtrl'
       }).
       otherwise({
-        redirectTo: '/beers'
+        redirectTo: '/dashboard'
       });
   }]);

@@ -3,11 +3,7 @@ import com.mongodb.*;
 import java.util.*;
 
 import static java.util.Arrays.asList;
-import static java.util.Arrays.sort;
 
-/**
- *
- */
 public class Parking {
 
     /**
@@ -24,10 +20,10 @@ public class Parking {
         projectFields.put("nom", "$name");
         projectFields.put("free", "$free");
         projectFields.put("max", "$max");
-        projectFields.put("y", new BasicDBObject("$substr", new ArrayList(asList("$date", 0, 4))));
-        projectFields.put("m", new BasicDBObject("$substr", new ArrayList(asList("$date", 5, 2))));
-        projectFields.put("d", new BasicDBObject("$substr", new ArrayList(asList("$date", 8, 2))));
-        projectFields.put("h", new BasicDBObject("$substr", new ArrayList(asList("$date", 11, 2))));
+        projectFields.put("y", new BasicDBObject("$substr", new ArrayList<Object>(asList("$date", 0, 4))));
+        projectFields.put("m", new BasicDBObject("$substr", new ArrayList<Object>(asList("$date", 5, 2))));
+        projectFields.put("d", new BasicDBObject("$substr", new ArrayList<Object>(asList("$date", 8, 2))));
+        projectFields.put("h", new BasicDBObject("$substr", new ArrayList<Object>(asList("$date", 11, 2))));
         DBObject project = new BasicDBObject("$project", projectFields );
 
         /**
@@ -56,8 +52,93 @@ public class Parking {
         sortFields.put("_id.hour", 1);
         DBObject sort = new BasicDBObject("$sort", sortFields);
 
+        DBObject groupResFields = new BasicDBObject();
+        BasicDBObject _idObjectField = new BasicDBObject();
+        _idObjectField.put("id", "$_id.id");
+        _idObjectField.put("name", "$_id.name");
+        _idObjectField.put("max", "$_id.max");
+        groupResFields.put("_id", _idObjectField);
+        BasicDBObject listDbObject = new BasicDBObject();
+        listDbObject.put("year", "$_id.year");
+        listDbObject.put("month", "$_id.month");
+        listDbObject.put("day", "$_id.day");
+        listDbObject.put("hour", "$_id.hour");
+        listDbObject.put("free", "$free");
+        groupResFields.put("values", new BasicDBObject("$push", listDbObject));
+        DBObject groupRes = new BasicDBObject("$group", groupResFields);
+
+
         List<DBObject> dbObjectList = new ArrayList<>();
-        for(DBObject dbObject : db.getCollection("parks").aggregate(project, group, sort).results())
+        for(DBObject dbObject : db.getCollection("parks").aggregate(project, group, sort, groupRes).results())
+            dbObjectList.add(dbObject);
+        return dbObjectList;
+    }
+
+    public static List<DBObject> getParkingFromDate(DB db, String date) {
+        /**
+         * Extraie les informations utiles pour effectuer l'aggregation
+         */
+        DBObject projectFields = new BasicDBObject("parking", 1);
+        projectFields.put("id", "$id");
+        projectFields.put("nom", "$name");
+        projectFields.put("free", "$free");
+        projectFields.put("max", "$max");
+        projectFields.put("y", new BasicDBObject("$substr", new ArrayList<Object>(asList("$date", 0, 4))));
+        projectFields.put("m", new BasicDBObject("$substr", new ArrayList<Object>(asList("$date", 5, 2))));
+        projectFields.put("d", new BasicDBObject("$substr", new ArrayList<Object>(asList("$date", 8, 2))));
+        projectFields.put("h", new BasicDBObject("$substr", new ArrayList<Object>(asList("$date", 11, 2))));
+        DBObject project = new BasicDBObject("$project", projectFields );
+
+        DBObject matchFields = new BasicDBObject();
+        matchFields.put("y", new BasicDBObject("$eq", date.substring(0, 4)));
+        matchFields.put("m", new BasicDBObject("$eq", date.substring(5, 7)));
+        matchFields.put("d", new BasicDBObject("$eq", date.substring(8, 10)));
+        //matchFields.put("h", new BasicDBObject("$gt", "0").append("$lt", "10"));
+        DBObject match = new BasicDBObject("$match", matchFields);
+
+        /**
+         * Groupe les résultats par id et par heure et effectue une moyenne sur les heures pour les places libres
+         */
+        DBObject groupFields = new BasicDBObject( "_id", "$parking");
+        BasicDBObject basicDBObject = new BasicDBObject();
+        basicDBObject.put("year", "$y");
+        basicDBObject.put("month", "$m");
+        basicDBObject.put("day", "$d");
+        basicDBObject.put("hour", "$h");
+        basicDBObject.put("id", "$id");
+        basicDBObject.put("name", "$nom");
+        basicDBObject.put("max", "$max");
+        groupFields.put("_id", basicDBObject);
+        groupFields.put("free", new BasicDBObject("$avg", "$free"));
+        DBObject group = new BasicDBObject("$group", groupFields);
+
+        /**
+         * Trie les résultats par date
+         */
+        DBObject sortFields = new BasicDBObject();
+        sortFields.put("_id.year", 1);
+        sortFields.put("_id.month", 1);
+        sortFields.put("_id.day", 1);
+        sortFields.put("_id.hour", 1);
+        DBObject sort = new BasicDBObject("$sort", sortFields);
+
+        DBObject groupResFields = new BasicDBObject();
+        BasicDBObject _idObjectField = new BasicDBObject();
+        _idObjectField.put("id", "$_id.id");
+        _idObjectField.put("name", "$_id.name");
+        _idObjectField.put("max", "$_id.max");
+        groupResFields.put("_id", _idObjectField);
+        BasicDBObject listDbObject = new BasicDBObject();
+        listDbObject.put("year", "$_id.year");
+        listDbObject.put("month", "$_id.month");
+        listDbObject.put("day", "$_id.day");
+        listDbObject.put("hour", "$_id.hour");
+        listDbObject.put("free", "$free");
+        groupResFields.put("values", new BasicDBObject("$push", listDbObject));
+        DBObject groupRes = new BasicDBObject("$group", groupResFields);
+
+        List<DBObject> dbObjectList = new ArrayList<>();
+        for(DBObject dbObject : db.getCollection("parks").aggregate(project, match, group, sort, groupRes).results())
             dbObjectList.add(dbObject);
         return dbObjectList;
     }

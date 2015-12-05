@@ -31,12 +31,12 @@ var Park = mongoose.model('Park', parkSchema);
 
 Park.remove({}, function() { console.log('Collection Park removed') });
 
-Park.find({id: 'colombier'}, function(error, data){
+/*Park.find({id: 'colombier'}, function(error, data){
   if(error)
     console.log(error);
   else
     console.log(data);
-});
+});*/
 
 function sendRequest(options) {
     http.get(options, function (res) {

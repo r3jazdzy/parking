@@ -3,16 +3,8 @@ import com.mongodb.DBObject;
 
 import java.util.List;
 
-/**
- *
- */
 public class ParkingInformation {
 
-    /**
-     *
-     * @param db
-     * @return
-     */
     public static List<DBObject> getAllParkingInformation(DB db) {
         return db.getCollection("parkinformations").find().toArray();
     }
