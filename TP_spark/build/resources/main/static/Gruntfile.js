@@ -12,7 +12,7 @@ module.exports = function (grunt) {
             },
             dist: {
                 files: {
-                    'js/min/minified.js': ['lib/angular/angular.min.js', 'lib/angular/*.js', 'js/*.js']
+                    'js/min/minified.js': ['lib/angular/angular.min.js','lib/angular/angular-route.js','lib/angular/angular-ressource.js', 'js/*.js']
                 }
             }
         },
@@ -24,10 +24,10 @@ module.exports = function (grunt) {
                 files: 'js/*.js',
                 tasks: ['ug'],
                 options: {
-                    interrupt: true,
-                },
-            },
-        },
+                    interrupt: true
+                }
+            }
+        }
     });
 
     grunt.registerTask('hint', ['jshint:dist']);

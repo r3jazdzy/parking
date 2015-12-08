@@ -16,7 +16,6 @@ app.controller('MapCtrl', ['$scope', 'ParkPosition', 'LastParking', function ($s
         ParkPosition.query().
         $promise.then(function (data) {
 
-
             LastParking.query().
             $promise.then(function (lastParkingData) {
 

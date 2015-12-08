@@ -4,9 +4,9 @@ angular.module('ParkServices', ['ngResource'])
             return $resource('/parking', null);
         }])
     .factory('MaxParking', function ($resource) {
-            return $resource('/parking/max', {}, {
-                query: {method: 'GET', params: {status: ''}, isArray: true}
-            });
+        return $resource('/parking/max', {}, {
+            query: {method: 'GET', params: {status: ''}, isArray: true}
+        });
     })
     .factory('LastParking', ['$resource',
         function ($resource) {

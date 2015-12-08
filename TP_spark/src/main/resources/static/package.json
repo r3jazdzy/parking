@@ -9,8 +9,5 @@
     "grunt-contrib-watch": "^0.6.1"
   },
   "author": "",
-  "license": "ISC",
-  "dependencies": {
-    "express": "^4.13.3"
-  }
+  "license": "ISC"
 }

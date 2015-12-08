@@ -8,7 +8,6 @@ var angularParking = angular.module('AngularParks', [
     'ngRoute'
 ]);
 
-
 angularParking.config(['$routeProvider',
     function ($routeProvider) {
         $routeProvider.

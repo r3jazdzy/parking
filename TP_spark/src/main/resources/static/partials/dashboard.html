@@ -6,7 +6,7 @@
     <!-- /.row -->
     <div ng-repeat="park in parks">
         <div class="col-md-3 col-sm-6 col-xs-6">
-            <div class="panel panel-green">
+            <div ng-class="park.status=='AVAILABLE' ? 'panel panel-green' : 'panel panel-red'" >
                 <div class="panel-heading">
                     <div class="row">
                         <div class="col-md-9">

@@ -31,10 +31,6 @@ var app = angular
             barChart(parksName, seriesFree, seriesUses);
         });
     }])
-
-    .controller('OccupationCtrl', ['$scope', function ($scope) {
-        //  barChart();
-    }])
     .controller('ParksMaxCtrl', ['MaxParking', function (MaxParking) {
 
         MaxParking.query().
@@ -45,6 +41,7 @@ var app = angular
                 parks.push({name: data[i]._id.name, y: data[i].max});
             }
 
+
             pieChart(parks);
         });
     }])
@@ -54,22 +51,21 @@ var app = angular
         $promise.then(function (data) {
 
             var categories = [];
-            var series = []
+            var series = [];
 
             for (var i = 0; i < data.length; i++) {
                 var values = data[i].values;
 
-                var serie = {name: data[i]._id.name, data: []};
+                var serie = {name: data[i]._id.name, data: [], visible: false};
 
                 for (var j = 0; j < values.length; j++) {
                     var value = values[j];
                     var date = value.day + '/' + value.month + '/' + value.year + ' ' + value.hour + "h";
-                    serie.data.push(value.free);
+                    serie.data.push(value.max - value.free);
                     if (categories[categories.length - 1] != date) categories.push(date);
                 }
                 series.push(serie);
             }
-
             lineChart(categories, series);
         });
     }]);
@@ -105,7 +101,12 @@ function pieChart(parks) {
             plotBackgroundColor: null,
             plotBorderWidth: null,
             plotShadow: false,
-            type: 'pie'
+            type: 'pie',
+            options3d: {
+                enabled: true,
+                alpha: 45,
+                beta: 0
+            }
         },
         title: {text: 'Nombre de places maximum.'},
         tooltip: {pointFormat: '{series.name}: <b>{point.y} places</b>'},
@@ -113,6 +114,7 @@ function pieChart(parks) {
             pie: {
                 allowPointSelect: true,
                 cursor: 'pointer',
+                depth: 35,
                 dataLabels: {
                     enabled: true,
                     format: '<b>{point.name}</b>: {point.percentage:.1f}%',
@@ -121,6 +123,7 @@ function pieChart(parks) {
             }
         },
         series: [{
+            type: 'pie',
             name: "Nb de places",
             colorByPoint: true,
             data: parks
