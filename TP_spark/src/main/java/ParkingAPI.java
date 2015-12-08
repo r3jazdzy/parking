@@ -26,7 +26,7 @@ public class ParkingAPI {
 
         get("/parking", (request, response) -> {
             response.header("Access-Control-Allow-Origin", "*");
-            return new Gson().toJson(Parking.getAllParking(db));
+            return new Gson().toJson(Parking.getAverageParking(db));
         });
 
         get("/parking/date/:date", (request, response) -> {
@@ -42,6 +42,11 @@ public class ParkingAPI {
         get("/parking/max", (request, response) -> {
             response.header("Access-Control-Allow-Origin", "*");
             return new Gson().toJson(Parking.getMaxParking(db));
+        });
+
+        get("/parking/all", (request, response) -> {
+            response.header("Access-Control-Allow-Origin", "*");
+            return new Gson().toJson(Parking.getAllParking(db));
         });
 
         /*get("/parking/:parkingId", (request, response) -> {

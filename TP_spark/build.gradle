@@ -3,6 +3,7 @@ version '1.0-SNAPSHOT'
 
 apply plugin: 'java'
 
+
 repositories {
     mavenCentral()
 }
@@ -12,3 +13,26 @@ dependencies {
     compile group: 'com.sparkjava', name: 'spark-core', version: '2.3'
     compile 'org.mongodb.mongo-hadoop:mongo-hadoop-core:1.4.2'
 }
+/*
+// Get the path for the locally installed binaries
+task npmBin << {
+    new ByteArrayOutputStream().withStream { os ->
+        def result = exec {
+            executable = 'npm'
+            args = ['bin']
+            standardOutput = os
+        }
+        ext.binPath = os.toString().trim() + "/"
+    }
+}
+
+// Install packages from package.json
+task npm(type: Exec) {
+    description = "Grab NodeJS dependencies (from package.json)"
+    commandLine = ["npm", "install"]
+    inputs.file "src/main/resources/static/package.json"
+    outputs.dir "src/main/resources/static/node_modules"
+
+    tasks.npmBin.execute()
+
+}*/

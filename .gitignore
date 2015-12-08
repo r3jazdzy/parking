@@ -1,2 +1,5 @@
 # node_modules
-TP_spark/src/main/resources/static/node_modules
+/TP_spark/src/main/resources/static/node_modules
+/TP_spark/build
+/node_modules
+/node/node_modules

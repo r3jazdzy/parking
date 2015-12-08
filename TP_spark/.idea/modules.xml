@@ -2,7 +2,7 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/API Spark.iml" filepath="$PROJECT_DIR$/API Spark.iml" />
+      <module fileurl="file://$PROJECT_DIR$/TP_spark.iml" filepath="$PROJECT_DIR$/TP_spark.iml" />
     </modules>
   </component>
 </project>

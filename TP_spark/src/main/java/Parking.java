@@ -11,7 +11,7 @@ public class Parking {
      * @param db la base mongoDB
      * @return la liste de documents contenant les informations des parking, moyennés par heure
      */
-    public static List<DBObject> getAllParking(DB db) {
+    public static List<DBObject> getAverageParking(DB db) {
         /**
          * Extraie les informations utiles pour effectuer l'aggregation
          */
@@ -37,9 +37,9 @@ public class Parking {
         basicDBObject.put("hour", "$h");
         basicDBObject.put("id", "$id");
         basicDBObject.put("name", "$nom");
-        basicDBObject.put("max", "$max");
         groupFields.put("_id", basicDBObject);
         groupFields.put("free", new BasicDBObject("$avg", "$free"));
+        groupFields.put("max", new BasicDBObject("$max", "$max"));
         DBObject group = new BasicDBObject("$group", groupFields);
 
         /**
@@ -56,7 +56,6 @@ public class Parking {
         BasicDBObject _idObjectField = new BasicDBObject();
         _idObjectField.put("id", "$_id.id");
         _idObjectField.put("name", "$_id.name");
-        _idObjectField.put("max", "$_id.max");
         groupResFields.put("_id", _idObjectField);
         BasicDBObject listDbObject = new BasicDBObject();
         listDbObject.put("year", "$_id.year");
@@ -64,6 +63,7 @@ public class Parking {
         listDbObject.put("day", "$_id.day");
         listDbObject.put("hour", "$_id.hour");
         listDbObject.put("free", "$free");
+        listDbObject.put("max", "$max");
         groupResFields.put("values", new BasicDBObject("$push", listDbObject));
         DBObject groupRes = new BasicDBObject("$group", groupResFields);
 
@@ -107,7 +107,6 @@ public class Parking {
         basicDBObject.put("hour", "$h");
         basicDBObject.put("id", "$id");
         basicDBObject.put("name", "$nom");
-        basicDBObject.put("max", "$max");
         groupFields.put("_id", basicDBObject);
         groupFields.put("free", new BasicDBObject("$avg", "$free"));
         DBObject group = new BasicDBObject("$group", groupFields);
@@ -126,7 +125,6 @@ public class Parking {
         BasicDBObject _idObjectField = new BasicDBObject();
         _idObjectField.put("id", "$_id.id");
         _idObjectField.put("name", "$_id.name");
-        _idObjectField.put("max", "$_id.max");
         groupResFields.put("_id", _idObjectField);
         BasicDBObject listDbObject = new BasicDBObject();
         listDbObject.put("year", "$_id.year");
@@ -134,6 +132,7 @@ public class Parking {
         listDbObject.put("day", "$_id.day");
         listDbObject.put("hour", "$_id.hour");
         listDbObject.put("free", "$free");
+        listDbObject.put("max", "$_id.max");
         groupResFields.put("values", new BasicDBObject("$push", listDbObject));
         DBObject groupRes = new BasicDBObject("$group", groupResFields);
 
@@ -167,14 +166,19 @@ public class Parking {
 
         DBObject groupFields = new BasicDBObject( "_id", "$parking");
         BasicDBObject basicDBObject = new BasicDBObject();
+        basicDBObject.put("id", "$id");
         basicDBObject.put("name", "$nom");
-        basicDBObject.put("max", "$max");
         groupFields.put("_id", basicDBObject);
+        groupFields.put("max", new BasicDBObject("$max", "$max"));
         DBObject group = new BasicDBObject("$group", groupFields);
 
         for(DBObject dbObject : db.getCollection("parks").aggregate(project, group).results())
             dbObjectList.add(dbObject);
         return dbObjectList;
+    }
+
+    public static List<DBObject> getAllParking(DB db) {
+        return db.getCollection("parks").find().toArray();
     }
 
     /*public static List<DBObject> getParking(DB db, String id) {
